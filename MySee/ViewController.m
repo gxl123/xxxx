@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+#import "Client.h"
 @interface ViewController ()
 
 @end
@@ -17,6 +17,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    Client *client = [[Client alloc] init];
+    [client start:@"LHN1WRB21X17E1LW45W1"]; // Put your device's UID here.
 }
 
 - (void)didReceiveMemoryWarning {
