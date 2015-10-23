@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface Client : NSObject
-
+@property int avIndex;
+@property Boolean isRunningRecvVideoThread;
+@property Boolean isRunningRecvAudioThread;
 - (void)start:(NSString *)UID;
-
+-(void)Stop;
 @end

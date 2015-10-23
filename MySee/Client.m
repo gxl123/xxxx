@@ -16,8 +16,11 @@
 #define AUDIO_BUF_SIZE	1024
 #define VIDEO_BUF_SIZE	2000000
 
-@implementation Client
-
+@implementation Client{
+    int SID;
+    pthread_t ThreadVideo_ID, ThreadAudio_ID;
+}
+@synthesize avIndex;
 unsigned int _getTickCount() {
     
 	struct timeval tv;
@@ -27,18 +30,18 @@ unsigned int _getTickCount() {
     
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
-
-void *thread_ReceiveAudio(void *arg)
+-(void *)thread_ReceiveAudio
+//void *thread_ReceiveAudio(void *arg)
 {
     NSLog(@"[thread_ReceiveAudio] Starting...");
-    
-    int avIndex = *(int *)arg;
+    Client *pClient=self;//(__bridge Client*)arg;
+    int avIndex = pClient.avIndex;//*(int *)arg;
     char buf[AUDIO_BUF_SIZE];
     unsigned int frmNo;
     int ret;
     FRAMEINFO_t frameInfo;
     
-    while (1)
+    while (pClient.isRunningRecvAudioThread)
     {
         ret = avCheckAudioBuf(avIndex);
         if (ret < 0) break;
@@ -77,18 +80,18 @@ void *thread_ReceiveAudio(void *arg)
     NSLog(@"[thread_ReceiveAudio] thread exit");
     return 0;
 }
-
-void *thread_ReceiveVideo(void *arg)
+-(void *)thread_ReceiveVideo
+//void *thread_ReceiveVideo(void *arg)
 {
     NSLog(@"[thread_ReceiveVideo] Starting...");
-
-    int avIndex = *(int *)arg;
+    Client *pClient=self;//(__bridge Client*)arg;
+    int avIndex = pClient.avIndex;//*(int *)arg;
     char *buf = malloc(VIDEO_BUF_SIZE);
     unsigned int frmNo;
     int ret;
     FRAMEINFO_t frameInfo;
     int outBufSize = 0, outFrmSize = 0, outFrmInfoSize = 0;
-    while (1) 
+    while (pClient.isRunningRecvVideoThread)
     {
         //ret = avRecvFrameData(avIndex, buf, VIDEO_BUF_SIZE, (char *)&frameInfo, sizeof(FRAMEINFO_t), &frmNo);
         ret =avRecvFrameData2(avIndex, buf, VIDEO_BUF_SIZE, &outBufSize, &outFrmSize, (char *)&frameInfo, sizeof(FRAMEINFO_t), &outFrmInfoSize, &frmNo);
@@ -164,7 +167,7 @@ void *thread_ReceiveVideo(void *arg)
 
 - (void)start:(NSString *)UID {
     
-    int ret, SID;
+    int ret;
     
     NSLog(@"AVStream Client Start");    
     
@@ -213,7 +216,7 @@ void *thread_ReceiveVideo(void *arg)
 #endif
     
 	unsigned long srvType;
-	int avIndex = avClientStart(SID, "admin", "admin1", 20000, &srvType, 0);
+	avIndex = avClientStart(SID, "admin", "admin123", 20000, &srvType, 0);
 	printf("Step 3: call avClientStart(%d).......\n", avIndex);	
     
 	if(avIndex < 0)
@@ -224,21 +227,38 @@ void *thread_ReceiveVideo(void *arg)
     
     if ([self start_ipcam_stream:avIndex]) 
     {
-        pthread_t ThreadVideo_ID, ThreadAudio_ID;
-		pthread_create(&ThreadVideo_ID, NULL, &thread_ReceiveVideo, (void *)&avIndex);
-		pthread_create(&ThreadAudio_ID, NULL, &thread_ReceiveAudio, (void *)&avIndex);
-		pthread_join(ThreadVideo_ID, NULL);
-		pthread_join(ThreadAudio_ID, NULL);
+        self.isRunningRecvAudioThread=YES;
+        self.isRunningRecvVideoThread=YES;
+		//pthread_create(&ThreadVideo_ID, NULL, &thread_ReceiveVideo, (__bridge void *)self);
+		//pthread_create(&ThreadAudio_ID, NULL, &thread_ReceiveAudio, (__bridge void *)self);
+        NSLog(@"threadMain=%@",[NSThread currentThread]);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSLog(@"threadAudio=%@",[NSThread currentThread]);
+            [self thread_ReceiveAudio];
+            
+        });
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSLog(@"threadVideo=%@",[NSThread currentThread]);
+            [self thread_ReceiveVideo];
+            
+        });
     }
     
-    avClientStop(avIndex);
-	NSLog(@"avClientStop OK");
-	IOTC_Session_Close(SID);
-	NSLog(@"IOTC_Session_Close OK");
-	avDeInitialize();
-	IOTC_DeInitialize();
-	
-	NSLog(@"StreamClient exit...");
-}
 
+}
+-(void)Stop{
+    self.isRunningRecvAudioThread=NO;
+    self.isRunningRecvVideoThread=NO;
+    //pthread_join(ThreadVideo_ID, NULL);//等待一个线程的结束
+    //pthread_join(ThreadAudio_ID, NULL);
+    
+    avClientStop(avIndex);
+    NSLog(@"avClientStop OK");
+    IOTC_Session_Close(SID);
+    NSLog(@"IOTC_Session_Close OK");
+    avDeInitialize();
+    IOTC_DeInitialize();
+    
+    NSLog(@"StreamClient exit...");
+}
 @end

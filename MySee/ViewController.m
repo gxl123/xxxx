@@ -12,18 +12,27 @@
 
 @end
 
-@implementation ViewController
+@implementation ViewController{
+    Client *client ;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    Client *client = [[Client alloc] init];
-    [client start:@"LHN1WRB21X17E1LW45W1"]; // Put your device's UID here.
+    client = [[Client alloc] init];
+
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+- (IBAction)doConnect:(id)sender {
+    [client start: @"LHN1WRB21X17E1LW45W1"];//@"AAAAAAAAAAAAAAAAAAAF"]; // Put your device's UID here.
+}
+
+- (IBAction)doDisconnect:(id)sender {
+    [client Stop];
 }
 
 @end

@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "avcodec.h"
+#import "swscale.h"
 @protocol VideoDecoderDelegate;
 @interface VideoDecoder : NSObject
 
