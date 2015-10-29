@@ -11,10 +11,12 @@
 #import "swscale.h"
 @protocol VideoDecoderDelegate;
 @interface VideoDecoder : NSObject
-
 @property (nonatomic, assign) id<VideoDecoderDelegate> delegate;
+-(void)deInit;
+-(void)push:(NSObject *)obj;
 @end
 
 @protocol VideoDecoderDelegate <NSObject>
 - (void) didReceiveRGBData:(const char*)data DataSize:(NSInteger)size;
+
 @end

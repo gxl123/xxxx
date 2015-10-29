@@ -12,7 +12,7 @@
 #import "AVIOCTRLDEFs.h"
 #import "AVFRAMEINFO.h"
 #import <sys/time.h>
-
+#import "VideoDecoder.h"
 #define AUDIO_BUF_SIZE	1024
 #define VIDEO_BUF_SIZE	2000000
 
@@ -35,7 +35,7 @@ unsigned int _getTickCount() {
 {
     NSLog(@"[thread_ReceiveAudio] Starting...");
     Client *pClient=self;//(__bridge Client*)arg;
-    int avIndex = pClient.avIndex;//*(int *)arg;
+    int tAvIndex = pClient.avIndex;//*(int *)arg;
     char buf[AUDIO_BUF_SIZE];
     unsigned int frmNo;
     int ret;
@@ -43,7 +43,7 @@ unsigned int _getTickCount() {
     
     while (pClient.isRunningRecvAudioThread)
     {
-        ret = avCheckAudioBuf(avIndex);
+        ret = avCheckAudioBuf(tAvIndex);
         if (ret < 0) break;
         if (ret < 3) // determined by audio frame rate
         {
@@ -51,7 +51,7 @@ unsigned int _getTickCount() {
             continue;
         }
             
-        ret = avRecvAudioData(avIndex, buf, AUDIO_BUF_SIZE, (char *)&frameInfo, sizeof(FRAMEINFO_t), &frmNo);		
+        ret = avRecvAudioData(tAvIndex, buf, AUDIO_BUF_SIZE, (char *)&frameInfo, sizeof(FRAMEINFO_t), &frmNo);
     
         if(ret == AV_ER_SESSION_CLOSE_BY_REMOTE)
         {
@@ -85,16 +85,17 @@ unsigned int _getTickCount() {
 {
     NSLog(@"[thread_ReceiveVideo] Starting...");
     Client *pClient=self;//(__bridge Client*)arg;
-    int avIndex = pClient.avIndex;//*(int *)arg;
+    int tAvIndex = pClient.avIndex;//*(int *)arg;
     char *buf = malloc(VIDEO_BUF_SIZE);
     unsigned int frmNo;
     int ret;
     FRAMEINFO_t frameInfo;
     int outBufSize = 0, outFrmSize = 0, outFrmInfoSize = 0;
+    VideoDecoder *pVDecoder=[[VideoDecoder alloc]init];
     while (pClient.isRunningRecvVideoThread)
     {
         //ret = avRecvFrameData(avIndex, buf, VIDEO_BUF_SIZE, (char *)&frameInfo, sizeof(FRAMEINFO_t), &frmNo);
-        ret =avRecvFrameData2(avIndex, buf, VIDEO_BUF_SIZE, &outBufSize, &outFrmSize, (char *)&frameInfo, sizeof(FRAMEINFO_t), &outFrmInfoSize, &frmNo);
+        ret =avRecvFrameData2(tAvIndex, buf, VIDEO_BUF_SIZE, &outBufSize, &outFrmSize, (char *)&frameInfo, sizeof(FRAMEINFO_t), &outFrmInfoSize, &frmNo);
         if(ret == AV_ER_DATA_NOREADY)
 		{
 			usleep(30000);
@@ -129,20 +130,27 @@ unsigned int _getTickCount() {
 		if(frameInfo.flags == IPC_FRAME_FLAG_IFRAME)
 		{
 			// got an IFrame, draw it.
-            NSLog(@"frmNo=%d",frmNo);
+            NSLog(@"I(%d)size=%d",frmNo,ret);
+            NSData *tPData=[NSData dataWithBytes:buf length:ret];
+            [pVDecoder push:tPData];
 		}
+        else if(frameInfo.flags == IPC_FRAME_FLAG_PBFRAME)
+        {
+            NSLog(@"P(%d)size=%d",frmNo,ret);
+        }
     }
+    [pVDecoder deInit];
     free(buf);
     NSLog(@"[thread_ReceiveVideo] thread exit");    
     return 0;
 }
 
-- (int)start_ipcam_stream:(int)avIndex {
+- (int)start_ipcam_stream:(int)avIndex_ {
     
     int ret;
     unsigned short val = 0;
     
-    if ((ret = avSendIOCtrl(avIndex, IOTYPE_INNER_SND_DATA_DELAY, (char *)&val, sizeof(unsigned short)) < 0))
+    if ((ret = avSendIOCtrl(avIndex_, IOTYPE_INNER_SND_DATA_DELAY, (char *)&val, sizeof(unsigned short)) < 0))
     {
         NSLog(@"start_ipcam_stream_failed[%d]", ret);
         return 0;
@@ -150,13 +158,13 @@ unsigned int _getTickCount() {
     
     SMsgAVIoctrlAVStream ioMsg;
     memset(&ioMsg, 0, sizeof(SMsgAVIoctrlAVStream));
-    if ((ret = avSendIOCtrl(avIndex, IOTYPE_USER_IPCAM_START, (char *)&ioMsg, sizeof(SMsgAVIoctrlAVStream)) < 0))
+    if ((ret = avSendIOCtrl(avIndex_, IOTYPE_USER_IPCAM_START, (char *)&ioMsg, sizeof(SMsgAVIoctrlAVStream)) < 0))
     {
         NSLog(@"start_ipcam_stream_failed[%d]", ret);
         return 0;        
     }
     
-    if ((ret = avSendIOCtrl(avIndex, IOTYPE_USER_IPCAM_AUDIOSTART, (char *)&ioMsg, sizeof(SMsgAVIoctrlAVStream)) < 0))
+    if ((ret = avSendIOCtrl(avIndex_, IOTYPE_USER_IPCAM_AUDIOSTART, (char *)&ioMsg, sizeof(SMsgAVIoctrlAVStream)) < 0))
     {
         NSLog(@"start_ipcam_stream_failed[%d]", ret);
         return 0;        
@@ -187,7 +195,7 @@ unsigned int _getTickCount() {
 	// use IOTC_Connect_ByUID or IOTC_Connect_ByName to connect with device
 #if 1
     
-    NSString *aesString = @"your aes key";
+    //NSString *aesString = @"your aes key";
     
 	SID = IOTC_Connect_ByUID((char *)[UID UTF8String]);
     
@@ -215,8 +223,8 @@ unsigned int _getTickCount() {
     
 #endif
     
-	unsigned long srvType;
-	avIndex = avClientStart(SID, "admin", "admin123", 20000, &srvType, 0);
+	unsigned int srvType;
+	avIndex = avClientStart(SID, "admin", "admin", 20000, &srvType, 0);
 	printf("Step 3: call avClientStart(%d).......\n", avIndex);	
     
 	if(avIndex < 0)
@@ -231,6 +239,7 @@ unsigned int _getTickCount() {
         self.isRunningRecvVideoThread=YES;
 		//pthread_create(&ThreadVideo_ID, NULL, &thread_ReceiveVideo, (__bridge void *)self);
 		//pthread_create(&ThreadAudio_ID, NULL, &thread_ReceiveAudio, (__bridge void *)self);
+        
         NSLog(@"threadMain=%@",[NSThread currentThread]);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSLog(@"threadAudio=%@",[NSThread currentThread]);
@@ -242,6 +251,7 @@ unsigned int _getTickCount() {
             [self thread_ReceiveVideo];
             
         });
+        
     }
     
 
