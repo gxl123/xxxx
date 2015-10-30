@@ -82,7 +82,9 @@
         if (ret>0){
             if (self.delegate && [self.delegate respondsToSelector:@selector(didReceiveRGBData:DataSize:)]) {
                 // GLog( tCtrl, (@"--- uid:%@ avRecvIOCtrl( %d, %d, %X, %@)", self.uid, self.sessionID, channel.avIndex, type, [self _getHexString:recvIOCtrlBuff[nIdx] Size:readSize]));
-                [self.delegate didReceiveRGBData:(char*)&tPicture DataSize:sizeof(AVPicture)];
+                //dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate didReceiveRGBData:(char*)&tPicture DataSize:sizeof(AVPicture)];
+                //});
             }
         }
         avpicture_free(&tPicture);

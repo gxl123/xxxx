@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VideoDecoder.h"
+@interface ViewController : UIViewController<VideoDecoderDelegate>
 
-@interface ViewController : UIViewController
-
+@property (weak, nonatomic) IBOutlet UIImageView *monitor;
 
 @end
 

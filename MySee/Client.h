@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "VideoDecoder.h"
 @interface Client : NSObject
 @property int avIndex;
 @property Boolean isRunningRecvVideoThread;
 @property Boolean isRunningRecvAudioThread;
+@property (nonatomic, assign) id<VideoDecoderDelegate> delegate;
 - (void)start:(NSString *)UID;
 -(void)Stop;
 @end

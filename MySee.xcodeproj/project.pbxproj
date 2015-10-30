@@ -21,6 +21,8 @@
 		659406201BDE210900CB7461 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 659406181BDE210900CB7461 /* libavutil.a */; };
 		659406211BDE210900CB7461 /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 659406191BDE210900CB7461 /* libswresample.a */; };
 		659406221BDE210900CB7461 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6594061A1BDE210900CB7461 /* libswscale.a */; };
+		6594BEB41BE35654003FE679 /* videoClip.png in Resources */ = {isa = PBXBuildFile; fileRef = 6594BEB31BE35654003FE679 /* videoClip.png */; };
+		65E050DF1BE349D4005E7D84 /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 65E050DE1BE349D4005E7D84 /* Utilities.m */; };
 		6D5699311A0638BE0072F175 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D5699301A0638BE0072F175 /* main.m */; };
 		6D5699341A0638BE0072F175 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D5699331A0638BE0072F175 /* AppDelegate.m */; };
 		6D5699371A0638BE0072F175 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D5699361A0638BE0072F175 /* ViewController.m */; };
@@ -144,6 +146,9 @@
 		659406181BDE210900CB7461 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavutil.a; sourceTree = "<group>"; };
 		659406191BDE210900CB7461 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libswresample.a; sourceTree = "<group>"; };
 		6594061A1BDE210900CB7461 /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libswscale.a; sourceTree = "<group>"; };
+		6594BEB31BE35654003FE679 /* videoClip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = videoClip.png; sourceTree = "<group>"; };
+		65E050DD1BE349D4005E7D84 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = MySee/Utilities.h; sourceTree = "<group>"; };
+		65E050DE1BE349D4005E7D84 /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Utilities.m; path = MySee/Utilities.m; sourceTree = "<group>"; };
 		6D56992B1A0638BE0072F175 /* MySee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MySee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D56992F1A0638BE0072F175 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6D5699301A0638BE0072F175 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -385,6 +390,14 @@
 			path = "universal-lib";
 			sourceTree = "<group>";
 		};
+		6594BEB21BE35654003FE679 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				6594BEB31BE35654003FE679 /* videoClip.png */,
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
 		65F166591BDA01AB00626CB2 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -394,6 +407,8 @@
 				6D5699331A0638BE0072F175 /* AppDelegate.m */,
 				6D5699351A0638BE0072F175 /* ViewController.h */,
 				6D5699361A0638BE0072F175 /* ViewController.m */,
+				65E050DD1BE349D4005E7D84 /* Utilities.h */,
+				65E050DE1BE349D4005E7D84 /* Utilities.m */,
 				65039ED51BD89611001A8488 /* Common.h */,
 				6D5699381A0638BE0072F175 /* Main.storyboard */,
 				6D56993B1A0638BE0072F175 /* Images.xcassets */,
@@ -446,6 +461,7 @@
 		6D56992D1A0638BE0072F175 /* MySee */ = {
 			isa = PBXGroup;
 			children = (
+				6594BEB21BE35654003FE679 /* images */,
 				65F1665A1BDA01C800626CB2 /* Video */,
 				65F166591BDA01AB00626CB2 /* UI */,
 				6D56992E1A0638BE0072F175 /* Supporting Files */,
@@ -522,6 +538,7 @@
 				6D56993A1A0638BE0072F175 /* Main.storyboard in Resources */,
 				6D56993F1A0638BE0072F175 /* LaunchScreen.xib in Resources */,
 				6D56993C1A0638BE0072F175 /* Images.xcassets in Resources */,
+				6594BEB41BE35654003FE679 /* videoClip.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,6 +554,7 @@
 				6D5699341A0638BE0072F175 /* AppDelegate.m in Sources */,
 				6D5699311A0638BE0072F175 /* main.m in Sources */,
 				65039ED21BD88DE5001A8488 /* VideoDecoder.m in Sources */,
+				65E050DF1BE349D4005E7D84 /* Utilities.m in Sources */,
 				6548E9E61BDF123800AD3908 /* test.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

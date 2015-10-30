@@ -92,6 +92,7 @@ unsigned int _getTickCount() {
     FRAMEINFO_t frameInfo;
     int outBufSize = 0, outFrmSize = 0, outFrmInfoSize = 0;
     VideoDecoder *pVDecoder=[[VideoDecoder alloc]init];
+    pVDecoder.delegate=self.delegate;
     while (pClient.isRunningRecvVideoThread)
     {
         //ret = avRecvFrameData(avIndex, buf, VIDEO_BUF_SIZE, (char *)&frameInfo, sizeof(FRAMEINFO_t), &frmNo);
