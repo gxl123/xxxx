@@ -14,7 +14,7 @@
 //#import "avformat.h"
 
 @implementation VideoDecoder{
-    NSConditionLock *decVideoThreadLock;
+    NSConditionLock *decVideoThreadLock,*screenAccessLock;
     NSMutableArray* FrameQueue;
     AVCodecParserContext *avpcx;
     AVCodecContext *avctx;
@@ -27,6 +27,7 @@
         // Initialize self.
         [self creatFile];
         decVideoThreadLock=[[NSConditionLock alloc]init];
+        screenAccessLock=[[NSConditionLock alloc]init];
         FrameQueue=[[NSMutableArray alloc]init];
         //初始化解码器
         avcodec_register_all();
@@ -79,6 +80,7 @@
 //        [myHandle2 closeFile];
         
         AVPicture tPicture;
+        // Allocate RGB picture
         avpicture_alloc(&tPicture, PIX_FMT_RGB24,640, 352);
         AVPacket tPacket;
         av_init_packet(&tPacket);
@@ -87,13 +89,26 @@
         NSLog(@"tPacket.data 1=%@",[self _getHexString:(char*)tPacket.data Size:tPacket.size]);
         int ret=[self frameDecode:(char*)&tPacket inLen:sizeof(AVPacket) outData:(char*)&tPicture outLen:sizeof(AVPicture)];
         if (ret>0){
+            
+            UIImage *pImg_=[self imageFromAVPicture:tPicture width:640 height:352];
+            //UIImage *pImg2_=[[UIImage alloc]initWithCGImage:pImg_.CGImage];//[[UIImage alloc]initWithCIImage:pImg_];
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            NSDate *date = [NSDate date];
+            [formatter setDateFormat:@"MM-dd-kk-mm-ss"];
+            NSString *videoPath_ = [self.videoPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.h264",[formatter stringFromDate:date]]];
+            NSLog(@"%@",videoPath_);
+            NSLog(@"%@",pImg_);
+            [self saveImageToFile:pImg_ :videoPath_];
             dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.delegate && [self.delegate respondsToSelector:@selector(didReceiveRGBData:DataSize:)]) {
-                // GLog( tCtrl, (@"--- uid:%@ avRecvIOCtrl( %d, %d, %X, %@)", self.uid, self.sessionID, channel.avIndex, type, [self _getHexString:recvIOCtrlBuff[nIdx] Size:readSize]));
+ 
+             /*
+                if (self.delegate && [self.delegate respondsToSelector:@selector(didReceiveRGBData:DataSize:)]) {
+                    // GLog( tCtrl, (@"--- uid:%@ avRecvIOCtrl( %d, %d, %X, %@)", self.uid, self.sessionID, channel.avIndex, type, [self _getHexString:recvIOCtrlBuff[nIdx] Size:readSize]));
                     [self.delegate didReceiveRGBData:(char*)&tPicture DataSize:sizeof(AVPicture)];
-            }
+                }*/
             });
         }
+        // Release old picture
         avpicture_free(&tPicture);
     }
     [decVideoThreadLock unlock];
@@ -211,7 +226,7 @@
     AVFrame *tpFrame=(AVFrame*)inData;
     AVPicture *tpPicture=(AVPicture*)outData;
     enum AVPixelFormat srcFormat=avctx->pix_fmt;//一般是PIX_FMT_YUV420P
-    enum AVPixelFormat dstFormat = PIX_FMT_RGB24;//RGBA与RGB24区别是？
+    enum AVPixelFormat dstFormat = PIX_FMT_RGB24;//RGBA与RGB24区别是？必须用RGB24,如果用RGBA图片会出现竖条纹
     int dstW=640;//暂时固定，由UI层下发
     int dstH=352;//暂时固定，由UI层下发
     int flags=SWS_BICUBLIN;//SWS_FAST_BILINEAR;//转换算法，还有很多种都有何区别？
@@ -235,7 +250,7 @@
         //GLog( tCtrl, ( @"onSnapshot -- pixelBuffer create failed!" ) );
     }
     
-    
+    /*
     //CVPixelBufferRef pixelBuff;
     CVPixelBufferLockBaseAddress(pixelBuffer, 0);
     UInt8* pData_buff = CVPixelBufferGetBaseAddress(pixelBuffer);
@@ -273,8 +288,8 @@
     
 
     UIImage *pImg_=[self getUIImage:imageFrame Width:dstW Height:dstH];
-    [self saveImageToFile:pImg_ :self.videoPath];
-    /*
+    [self saveImageToFile:pImg_ :self.videoPath];*/
+    
     struct SwsContext *c=sws_getContext(avctx->width, avctx->height, srcFormat,
                                         dstW, dstH, dstFormat,
                                         flags, NULL, NULL, NULL);
@@ -289,10 +304,10 @@
     
     int result=sws_scale(c, srcSlice, srcStride, srcSliceY, srcSliceH, dst, dstStride);
     
-    UIImage *pImg_=[self imageFromAVPicture:*tpPicture width:dstW height:dstH];
-    [self saveImageToFile:pImg_ :self.videoPath];
+    //UIImage *pImg_=[self imageFromAVPicture:*tpPicture width:dstW height:dstH];
+    //[self saveImageToFile:pImg_ :self.videoPath];
     NSLog(@"result=%d;c=%d,s1=%d,s2=%d,sY=%d,sH=%d;d1=%d,d2=%d",result,c,srcSlice,srcStride,srcSliceY, srcSliceH, dst, dstStride);
-    sws_freeContext(c);*/
+    sws_freeContext(c);
     return result;
 }
 - (UIImage *) getUIImage:(char *)buff Width:(NSInteger)width Height:(NSInteger)height {
@@ -334,18 +349,18 @@
 -(UIImage *)imageFromAVPicture:(AVPicture)pict width:(int)width height:(int)height {
     CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
     CFDataRef data = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, pict.data[0], pict.linesize[0]*height,kCFAllocatorNull);
-    CGDataProviderRef provider = CGDataProviderCreateWithCFData(data);
+    CGDataProviderRef provider = CGDataProviderCreateWithCFData(data);//CGDataProviderCreateWithData(NULL, pict.data[0], width * height * 3, NULL);//
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGImageRef cgImage = CGImageCreate(width,
                                        height,
                                        8,
                                        24,
-                                       pict.linesize[0],
+                                       pict.linesize[0],//-》是640*3吗？
                                        colorSpace,
                                        bitmapInfo,
                                        provider,
                                        NULL,
-                                       NO,
+                                       NO,//true,//
                                        kCGRenderingIntentDefault);
     CGColorSpaceRelease(colorSpace);
     UIImage *image = [UIImage imageWithCGImage:cgImage];
@@ -566,7 +581,7 @@
     NSError *error = nil;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
-    //NSString *videoPath_ = [documentsDirectory stringByAppendingPathComponent:@"/Audio"];
+    NSString *videoPath_ = [documentsDirectory stringByAppendingPathComponent:@"/video"];
     //NSString *sourcePath_ = [videoPath_ stringByAppendingString:[NSString stringWithFormat:@"/%@",@"Recorder"]];
     
 //    if (![[NSFileManager defaultManager] fileExistsAtPath:videoPath_]) {
@@ -586,7 +601,7 @@
         [[NSFileManager defaultManager] createDirectoryAtPath:dataPath_ withIntermediateDirectories:NO attributes:nil error:&error];
     }
     
-    NSString *videoPath_ = [dataPath_ stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.h264",[formatter stringFromDate:date]]];
+//    NSString *videoPath_ = [dataPath_ stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.h264",[formatter stringFromDate:date]]];
     self.videoPath = videoPath_;
 //    NSString *mixPath_ = [dataPath_ stringByAppendingPathComponent:@"ace.raw"];
 //    self.mixPath = mixPath_;

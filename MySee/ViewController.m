@@ -41,11 +41,11 @@
   
     AVPicture tPicture;
     memcpy(&tPicture, data, size);
-      [self rgbToImage:tPicture];
-    dispatch_async(dispatch_get_main_queue(), ^{
+  //    [self rgbToImage:tPicture];
+ //   dispatch_async(dispatch_get_main_queue(), ^{
     //[self updateimage];
-    });
-//    UIImage* pImg= [self imageFromAVPicture:tPicture width:20 height:20];
+ //   });
+    UIImage* pImg= [self imageFromAVPicture:tPicture width:20 height:20];
 //    NSLog(@"pImg=%@",pImg);
 //    static int i=0;
 //    i++;
@@ -54,7 +54,7 @@
 //         
 //     //    self.monitor.image=  xx;//pImg;
 //    dispatch_async(dispatch_get_main_queue(), ^{
-//       //  self.monitor.image=pImg;
+         self.monitor.image=pImg;
 //     });
 //    
     
@@ -75,7 +75,7 @@
 //CGImageRef cgImage = CGImageCreate(width, height, 8, 32, bytesPerRow, rgbColorSpace, kCGImageAlphaNoneSkipFirst|kCGBitmapByteOrder32Little, provider, NULL, true, kCGRenderingIntentDefault);
     
    // NSData *data = data;//(NSData *)[dict valueForKey:@"rawData"];
-    NSNumber *width =[NSNumber numberWithInt:40];//(NSNumber *)[dict valueForKey:@"videoWidth"];
+ /*   NSNumber *width =[NSNumber numberWithInt:40];//(NSNumber *)[dict valueForKey:@"videoWidth"];
     NSNumber *height =[NSNumber numberWithInt:40];//(NSNumber *)[dict valueForKey:@"videoHeight"];
     
     CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, data, [width intValue] * [height intValue] * 3, NULL);
@@ -98,12 +98,35 @@
     if (provider != nil) {
         CGDataProviderRelease(provider);
         provider = nil;
-    }
+    }*/
     
 
     
 }
-
+-(UIImage *)imageFromAVPicture:(AVPicture)pict width:(int)width height:(int)height {
+    CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
+    CFDataRef data = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, pict.data[0], pict.linesize[0]*height,kCFAllocatorNull);
+    CGDataProviderRef provider = CGDataProviderCreateWithCFData(data);//CGDataProviderCreateWithData(NULL, pict.data[0], width * height * 3, NULL);//
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGImageRef cgImage = CGImageCreate(width,
+                                       height,
+                                       8,
+                                       24,
+                                       pict.linesize[0],//-》是640*3吗？
+                                       colorSpace,
+                                       bitmapInfo,
+                                       provider,
+                                       NULL,
+                                       NO,//true,//
+                                       kCGRenderingIntentDefault);
+    CGColorSpaceRelease(colorSpace);
+    UIImage *image = [UIImage imageWithCGImage:cgImage];
+    CGImageRelease(cgImage);
+    CGDataProviderRelease(provider);
+    CFRelease(data);
+    
+    return image;
+}/*
 -(UIImage *)imageFromAVPicture:(AVPicture)pict width:(int)width height:(int)height {
     CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
     
@@ -139,7 +162,7 @@
     
     
     return image;
-}
+}*/
 
 -(void)savePPMPicture:(AVPicture)pict width:(int)width height:(int)height index:(int)iFrame {
     FILE *pFile;
