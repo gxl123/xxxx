@@ -55,7 +55,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="0.0" height="0.0"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="109" width="124" height="86"/>
+                                    <rect key="frame" x="0.0" y="250" width="640" height="352"/>
                                 </variation>
                             </imageView>
                         </subviews>
@@ -71,6 +71,10 @@
                             <mask key="subviews">
                                 <include reference="w85-Jr-jDp"/>
                                 <include reference="RFH-lm-8aS"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
                                 <include reference="Iq6-eO-Rai"/>
                             </mask>
                         </variation>

@@ -11,6 +11,6 @@
 @interface ViewController : UIViewController<VideoDecoderDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *monitor;
-
+@property(nonatomic,retain)UIImage* rgbImage;
 @end
 

@@ -7,11 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "avcodec.h"
 #import "swscale.h"
+#import <AudioToolbox/AudioToolbox.h>
 @protocol VideoDecoderDelegate;
 @interface VideoDecoder : NSObject
 @property (nonatomic, assign) id<VideoDecoderDelegate> delegate;
+@property (atomic, retain) NSString *videoPath;
+
 -(void)deInit;
 -(void)push:(NSObject *)obj;
 @end

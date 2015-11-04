@@ -38,15 +38,28 @@
 }
 
 - (void) didReceiveRGBData:(const char*)data DataSize:(NSInteger)size{
-     dispatch_async(dispatch_get_main_queue(), ^{
+  
     AVPicture tPicture;
     memcpy(&tPicture, data, size);
-    UIImage* pImg= [self imageFromAVPicture:tPicture width:20 height:20];
-    static int i=0;
-    i++;
-    //[self savePPMPicture:tPicture width:640 height:352 index:i];
-    self.monitor.image=  pImg;
-     });
+      [self rgbToImage:tPicture];
+    dispatch_async(dispatch_get_main_queue(), ^{
+    //[self updateimage];
+    });
+//    UIImage* pImg= [self imageFromAVPicture:tPicture width:20 height:20];
+//    NSLog(@"pImg=%@",pImg);
+//    static int i=0;
+//    i++;
+//         UIImage *xx=[UIImage imageNamed:@"videoClip.png" ];
+//    //[self savePPMPicture:tPicture width:640 height:352 index:i];
+//         
+//     //    self.monitor.image=  xx;//pImg;
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//       //  self.monitor.image=pImg;
+//     });
+//    
+    
+    
+    
 // CVImageBufferRef imageBuffer =CMSampleBufferGetImageBuffer(sampleBuffer);
 //
 //CVPixelBufferLockBaseAddress(imageBuffer, 0);
@@ -60,6 +73,34 @@
 //CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, baseAddress, bufferSize, NULL);
 //
 //CGImageRef cgImage = CGImageCreate(width, height, 8, 32, bytesPerRow, rgbColorSpace, kCGImageAlphaNoneSkipFirst|kCGBitmapByteOrder32Little, provider, NULL, true, kCGRenderingIntentDefault);
+    
+   // NSData *data = data;//(NSData *)[dict valueForKey:@"rawData"];
+    NSNumber *width =[NSNumber numberWithInt:40];//(NSNumber *)[dict valueForKey:@"videoWidth"];
+    NSNumber *height =[NSNumber numberWithInt:40];//(NSNumber *)[dict valueForKey:@"videoHeight"];
+    
+    CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, data, [width intValue] * [height intValue] * 3, NULL);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGImageRef imgRef = CGImageCreate([width intValue], [height intValue], 8, 24, [width intValue] * 3, colorSpace, kCGBitmapByteOrderDefault, provider, NULL, true,  kCGRenderingIntentDefault);
+    
+    UIImage *img = [UIImage imageWithCGImage:imgRef];
+    self.monitor.image = [img copy];
+    
+    if (imgRef != nil) {
+        CGImageRelease(imgRef);
+        imgRef = nil;
+    }
+    
+    if (colorSpace != nil) {
+        CGColorSpaceRelease(colorSpace);
+        colorSpace = nil;
+    }
+    
+    if (provider != nil) {
+        CGDataProviderRelease(provider);
+        provider = nil;
+    }
+    
+
     
 }
 
@@ -128,4 +169,90 @@
     // Close file
     fclose(pFile);
 }
+//- (UIImage*) toUIImage
+//{
+//    CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
+//    CFDataRef data = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, [self.data bytes], 20 * 20 * 3,kCFAllocatorNull);
+//    NSAssert( [self.data length] == self.width * self.height * 3,
+//             @"Fatal error: data length:%d, width:%d, height:%d, mul3=%d",
+//             [self.data length],
+//             self.width, self.height, self.width * self.height * 3 );
+//    
+//    CGDataProviderRef provider = CGDataProviderCreateWithCFData(data);
+//    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+//    CGImageRef cgImage = CGImageCreate(20,
+//                                       20,
+//                                       8,
+//                                       24,
+//                                       3 * 20,
+//                                       colorSpace,
+//                                       bitmapInfo,
+//                                       provider,
+//                                       NULL,
+//                                       NO,
+//                                       kCGRenderingIntentDefault);
+//    UIImage *image = [UIImage imageWithCGImage:cgImage];
+//    CGImageRelease(cgImage);
+//    CGColorSpaceRelease(colorSpace);
+//    CGDataProviderRelease(provider);
+//    CFRelease(data);
+    
+//    return image;
+//}
+
+-(void)rgbToImage:(AVPicture)picture
+{
+    //    NSLog(@"rgb to rgba start");
+//    if (rgbView == nil
+//        || picture.data[0] == NULL
+//        || frameWidth == 0
+//        || frameHeight == 0) {
+//        NSLog(@"rgb to rgba over - 0");
+//        return;
+//    }
+    int frameWidth=20;//640;
+    int frameHeight=20;//352;
+    @try {
+        CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
+        CFDataRef data = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, picture.data[0], picture.linesize[0]*frameHeight,kCFAllocatorNull);
+        CGDataProviderRef provider = CGDataProviderCreateWithCFData(data);
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGImageRef cgImage = CGImageCreate(frameWidth,
+                                           frameHeight,
+                                           8,
+                                           24,
+                                           frameWidth*3,
+                                           colorSpace,
+                                           bitmapInfo,
+                                           provider,
+                                           NULL,
+                                           NO,
+                                           kCGRenderingIntentDefault);
+        
+        CGColorSpaceRelease(colorSpace);
+        
+        UIImage *image = [[UIImage alloc]initWithCGImage:cgImage];
+        self.rgbImage = image;
+       // [image release];
+        
+        CGImageRelease(cgImage);
+        CGDataProviderRelease(provider);
+        CFRelease(data);
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception !!!!!");
+    }
+    @finally {
+        //        NSLog(@"finally");
+    }
+    
+    //    NSLog(@"rgb to rgba over - 1");
+    
+}
+//不断更新图片到UI
+-(void)updateimage
+{
+    self.monitor.image = self.rgbImage;
+}
+
 @end
