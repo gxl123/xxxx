@@ -78,6 +78,7 @@
 //        [myHandle2 seekToEndOfFile];
 //        [myHandle2 writeData:h264FrameData];
 //        [myHandle2 closeFile];
+
         
         AVPicture tPicture;
         // Allocate RGB picture
@@ -98,14 +99,18 @@
             NSString *videoPath_ = [self.videoPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.h264",[formatter stringFromDate:date]]];
             NSLog(@"%@",videoPath_);
             NSLog(@"%@",pImg_);
-            [self saveImageToFile:pImg_ :videoPath_];
+           // [self saveImageToFile:pImg2_ :videoPath_];
+            UIImage *pImg2_ = [UIImage imageWithData:UIImagePNGRepresentation(pImg_)];
+            
             dispatch_async(dispatch_get_main_queue(), ^{
- 
-             /*
-                if (self.delegate && [self.delegate respondsToSelector:@selector(didReceiveRGBData:DataSize:)]) {
+                NSLog(@"%@",pImg_);
+                [self saveImageToFile:pImg2_ :videoPath_];
+             
+                if (self.delegate && [self.delegate respondsToSelector:@selector(didReceiveImage:)]) {
                     // GLog( tCtrl, (@"--- uid:%@ avRecvIOCtrl( %d, %d, %X, %@)", self.uid, self.sessionID, channel.avIndex, type, [self _getHexString:recvIOCtrlBuff[nIdx] Size:readSize]));
-                    [self.delegate didReceiveRGBData:(char*)&tPicture DataSize:sizeof(AVPicture)];
-                }*/
+                   // [self.delegate didReceiveRGBData:(char*)&tPicture DataSize:sizeof(AVPicture)];
+                    [self.delegate didReceiveImage:pImg2_];
+                }
             });
         }
         // Release old picture

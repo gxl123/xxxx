@@ -87,7 +87,7 @@ unsigned int _getTickCount() {
     Client *pClient=self;//(__bridge Client*)arg;
     int tAvIndex = pClient.avIndex;//*(int *)arg;
     char *buf = malloc(VIDEO_BUF_SIZE);
-    unsigned int frmNo;
+    unsigned int frmNo=0,prevFrmNo=0;
     int ret;
     FRAMEINFO_t frameInfo;
     int outBufSize = 0, outFrmSize = 0, outFrmInfoSize = 0;
@@ -130,6 +130,7 @@ unsigned int _getTickCount() {
 		
 		if(frameInfo.flags == IPC_FRAME_FLAG_IFRAME)
 		{
+            //prevFrmNo=frmNo;
 			// got an IFrame, draw it.
             NSLog(@"I(%d)size=%d",frmNo,ret);
             NSData *tPData=[NSData dataWithBytes:buf length:ret];
@@ -138,6 +139,8 @@ unsigned int _getTickCount() {
         else if(frameInfo.flags == IPC_FRAME_FLAG_PBFRAME)
         {
             NSLog(@"P(%d)size=%d",frmNo,ret);
+           // NSData *tPData=[NSData dataWithBytes:buf length:ret];
+          //  [pVDecoder push:tPData];
         }
     }
     [pVDecoder deInit];

@@ -36,7 +36,9 @@
 - (IBAction)doDisconnect:(id)sender {
     [client Stop];
 }
-
+- (void) didReceiveImage:(UIImage*)data{
+    self.monitor.image=data;
+}
 - (void) didReceiveRGBData:(const char*)data DataSize:(NSInteger)size{
   
     AVPicture tPicture;

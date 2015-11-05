@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -17,19 +18,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w85-Jr-jDp">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <items>
-                                    <barButtonItem systemItem="add" id="ADL-fS-kmc"/>
-                                    <barButtonItem systemItem="edit" id="qgi-gQ-3ND"/>
-                                    <barButtonItem systemItem="cancel" id="igA-Yb-fqH"/>
-                                </items>
-                                <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="286" width="400" height="44"/>
+                            <imageView opaque="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Iq6-eO-Rai">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="Igz-Ot-N4d"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Igz-Ot-N4d"/>
+                                    </mask>
                                 </variation>
-                            </toolbar>
+                                <variation key="widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="0.0"/>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="Igz-Ot-N4d"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RFH-lm-8aS">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="qeV-e6-SPg"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem title="连线" id="6Ql-ln-oMj">
                                         <connections>
@@ -44,38 +57,116 @@
                                     <barButtonItem title="播放" id="0v1-AO-Mio"/>
                                     <barButtonItem title="全屏" id="lFb-Pn-rZe"/>
                                 </items>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="qeV-e6-SPg"/>
+                                    </mask>
+                                </variation>
                                 <variation key="widthClass=compact" fixedFrame="YES">
                                     <rect key="frame" x="0.0" y="195" width="400" height="44"/>
                                 </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="qeV-e6-SPg"/>
+                                    </mask>
+                                </variation>
                             </toolbar>
-                            <imageView opaque="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Iq6-eO-Rai">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w85-Jr-jDp">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="66s-IP-yTJ"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem systemItem="add" id="ADL-fS-kmc"/>
+                                    <barButtonItem systemItem="edit" id="qgi-gQ-3ND"/>
+                                    <barButtonItem systemItem="cancel" id="igA-Yb-fqH"/>
+                                </items>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="66s-IP-yTJ"/>
+                                    </mask>
+                                </variation>
                                 <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="0.0"/>
+                                    <rect key="frame" x="0.0" y="286" width="400" height="44"/>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="250" width="640" height="352"/>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="66s-IP-yTJ"/>
+                                    </mask>
                                 </variation>
-                            </imageView>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="RFH-lm-8aS" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="6PS-a2-9h5"/>
+                            <constraint firstItem="RFH-lm-8aS" firstAttribute="top" secondItem="w85-Jr-jDp" secondAttribute="bottom" constant="60" id="9T9-80-RVO"/>
+                            <constraint firstItem="Iq6-eO-Rai" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="2" id="Edq-gj-1de"/>
+                            <constraint firstItem="w85-Jr-jDp" firstAttribute="top" secondItem="RFH-lm-8aS" secondAttribute="bottom" constant="26" id="Pio-1D-wDw"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="w85-Jr-jDp" secondAttribute="trailing" constant="-20" id="YsX-jO-PsS"/>
+                            <constraint firstItem="Iq6-eO-Rai" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="5" id="aKn-KB-28X">
+                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                            </constraint>
+                            <constraint firstAttribute="trailingMargin" secondItem="Iq6-eO-Rai" secondAttribute="trailing" constant="52" id="fAR-98-iHt">
+                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                            </constraint>
+                            <constraint firstItem="w85-Jr-jDp" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-20" id="gYM-qr-IHY"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="RFH-lm-8aS" secondAttribute="bottom" constant="287" id="gqx-xr-Qd2"/>
+                            <constraint firstItem="RFH-lm-8aS" firstAttribute="centerX" secondItem="w85-Jr-jDp" secondAttribute="centerX" id="gtN-d6-UMS"/>
+                            <constraint firstItem="RFH-lm-8aS" firstAttribute="top" secondItem="Iq6-eO-Rai" secondAttribute="bottom" constant="47" id="qKI-B1-b2D">
+                                <variation key="heightClass=regular-widthClass=compact" constant="247"/>
+                            </constraint>
+                            <constraint firstAttribute="trailingMargin" secondItem="RFH-lm-8aS" secondAttribute="trailing" id="rdd-nF-Tl8"/>
+                            <constraint firstItem="RFH-lm-8aS" firstAttribute="top" secondItem="Iq6-eO-Rai" secondAttribute="bottom" constant="73" id="sV3-Ip-5ii"/>
+                            <constraint firstItem="w85-Jr-jDp" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="wZc-oF-VAS"/>
+                        </constraints>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="w85-Jr-jDp"/>
-                                <exclude reference="RFH-lm-8aS"/>
                                 <exclude reference="Iq6-eO-Rai"/>
+                                <exclude reference="RFH-lm-8aS"/>
+                                <exclude reference="w85-Jr-jDp"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="Edq-gj-1de"/>
+                                <exclude reference="aKn-KB-28X"/>
+                                <exclude reference="fAR-98-iHt"/>
+                                <exclude reference="6PS-a2-9h5"/>
+                                <exclude reference="9T9-80-RVO"/>
+                                <exclude reference="gtN-d6-UMS"/>
+                                <exclude reference="qKI-B1-b2D"/>
+                                <exclude reference="rdd-nF-Tl8"/>
+                                <exclude reference="sV3-Ip-5ii"/>
+                                <exclude reference="Pio-1D-wDw"/>
+                                <exclude reference="YsX-jO-PsS"/>
+                                <exclude reference="gYM-qr-IHY"/>
+                                <exclude reference="wZc-oF-VAS"/>
+                                <exclude reference="gqx-xr-Qd2"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
-                                <include reference="w85-Jr-jDp"/>
                                 <include reference="RFH-lm-8aS"/>
+                                <include reference="w85-Jr-jDp"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="subviews">
                                 <include reference="Iq6-eO-Rai"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="Edq-gj-1de"/>
+                                <include reference="aKn-KB-28X"/>
+                                <include reference="fAR-98-iHt"/>
+                                <include reference="6PS-a2-9h5"/>
+                                <exclude reference="9T9-80-RVO"/>
+                                <exclude reference="gtN-d6-UMS"/>
+                                <exclude reference="qKI-B1-b2D"/>
+                                <include reference="rdd-nF-Tl8"/>
+                                <include reference="sV3-Ip-5ii"/>
+                                <include reference="Pio-1D-wDw"/>
+                                <include reference="YsX-jO-PsS"/>
+                                <include reference="gYM-qr-IHY"/>
+                                <exclude reference="wZc-oF-VAS"/>
+                                <exclude reference="gqx-xr-Qd2"/>
                             </mask>
                         </variation>
                     </view>

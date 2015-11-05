@@ -22,5 +22,5 @@
 
 @protocol VideoDecoderDelegate <NSObject>
 - (void) didReceiveRGBData:(const char*)data DataSize:(NSInteger)size;
-
+- (void) didReceiveImage:(UIImage*)data;
 @end
