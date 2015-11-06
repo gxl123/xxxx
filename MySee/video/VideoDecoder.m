@@ -8,6 +8,7 @@
 
 #import "VideoDecoder.h"
 #import "Common.h"
+#import "AppDelegate.h"
 //#import "avcodec.h"
 //#import "swscale.h"
 //
@@ -19,13 +20,15 @@
     AVCodecParserContext *avpcx;
     AVCodecContext *avctx;
     BOOL bStop;
+    
+    AppDelegate *appDelegate;
 }
 
 - (id)init {
     self = [super init];
     if (self) {
         // Initialize self.
-        [self creatFile];
+        appDelegate=[[UIApplication sharedApplication] delegate];
         decVideoThreadLock=[[NSConditionLock alloc]init];
         screenAccessLock=[[NSConditionLock alloc]init];
         FrameQueue=[[NSMutableArray alloc]init];
@@ -74,10 +77,11 @@
             continue;
         }
         //写文件h264
-//        NSFileHandle *myHandle2 = [NSFileHandle fileHandleForWritingAtPath:self.videoPath];
-//        [myHandle2 seekToEndOfFile];
-//        [myHandle2 writeData:h264FrameData];
-//        [myHandle2 closeFile];
+        NSFileHandle *myHandle2 = [NSFileHandle fileHandleForWritingAtPath:appDelegate.videoH264Path];
+        [myHandle2 seekToEndOfFile];
+        [myHandle2 writeData:h264FrameData];
+        [myHandle2 closeFile];
+
 
         
         AVPicture tPicture;
@@ -90,13 +94,13 @@
         NSLog(@"tPacket.data 1=%@",[self _getHexString:(char*)tPacket.data Size:tPacket.size]);
         int ret=[self frameDecode:(char*)&tPacket inLen:sizeof(AVPacket) outData:(char*)&tPicture outLen:sizeof(AVPicture)];
         if (ret>0){
-            
+            /*
             UIImage *pImg_=[self imageFromAVPicture:tPicture width:640 height:352];
             //UIImage *pImg2_=[[UIImage alloc]initWithCGImage:pImg_.CGImage];//[[UIImage alloc]initWithCIImage:pImg_];
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             NSDate *date = [NSDate date];
             [formatter setDateFormat:@"MM-dd-kk-mm-ss"];
-            NSString *videoPath_ = [self.videoPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.h264",[formatter stringFromDate:date]]];
+            NSString *videoPath_ = [appDelegate.videoPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpg",[formatter stringFromDate:date]]];
             NSLog(@"%@",videoPath_);
             NSLog(@"%@",pImg_);
            // [self saveImageToFile:pImg2_ :videoPath_];
@@ -109,9 +113,9 @@
                 if (self.delegate && [self.delegate respondsToSelector:@selector(didReceiveImage:)]) {
                     // GLog( tCtrl, (@"--- uid:%@ avRecvIOCtrl( %d, %d, %X, %@)", self.uid, self.sessionID, channel.avIndex, type, [self _getHexString:recvIOCtrlBuff[nIdx] Size:readSize]));
                    // [self.delegate didReceiveRGBData:(char*)&tPicture DataSize:sizeof(AVPicture)];
-                    [self.delegate didReceiveImage:pImg2_];
+                    //[self.delegate didReceiveImage:pImg2_];
                 }
-            });
+            });*/
         }
         // Release old picture
         avpicture_free(&tPicture);
@@ -136,7 +140,11 @@
     int ret=[self h264ToYUV:inData inLen:inLen outData:(char*)pFrame outLen:sizeof(AVFrame)];
     
 
+    
+
     if (ret==1) {
+        
+        
         //AVPicture *pPicture=outData;
         int ret2=[self yUVToRGB:(char*)pFrame inLen:sizeof(AVFrame) outData:outData outLen:outLen];
         NSLog(@"the height of the output slice=%d",ret2);
@@ -176,42 +184,42 @@
             //memcpy(outData, picture, outLen);
             //av_frame_free(&picture);//释放avFrame
 #pragma mark-- 将YUV保存为文件
-//            int p,i;
-//            unsigned char *DisplayBuf;
-//            DisplayBuf = (unsigned char *)malloc(sizeof(unsigned char)*(3 * 1280 * 720));
-//            memset(DisplayBuf,0,3 * 1280 * 720);
-//            unsigned char *yuv420[3];
-//            yuv420[0]=DisplayBuf;
-//            //6.将picture中的YUV数据显示或者保存到文件
-//            p=0;
-//            for(i=0; i<avctx->height; i++)
-//            {
-//                memcpy(DisplayBuf+p,tpFrame->data[0] + i * tpFrame->linesize[0], avctx->width);
-//                p+=avctx->width;
-//            }
-//            
-//            yuv420[1]=DisplayBuf+p;
-//            
-//            for(i=0; i<avctx->height/2; i++)
-//            {
-//                memcpy(DisplayBuf+p,tpFrame->data[1] + i * tpFrame->linesize[1], avctx->width/2);
-//                p+=avctx->width/2;
-//            }
-//            
-//            yuv420[2]=DisplayBuf+p;
-//            
-//            for(i=0; i<avctx->height/2; i++)
-//            {
-//                memcpy(DisplayBuf+p,tpFrame->data[2] + i * tpFrame->linesize[2], avctx->width/2);
-//                p+=avctx->width/2;
-//            }
-//            NSData *data_=[NSData dataWithBytes:DisplayBuf length:p];
-//            //写文件yuv
-//            NSFileHandle *myHandle2 = [NSFileHandle fileHandleForWritingAtPath:self.videoPath];
-//            [myHandle2 seekToEndOfFile];
-//            [myHandle2 writeData:data_];
-//            [myHandle2 closeFile];
-//            free(DisplayBuf);
+            int p,i;
+            unsigned char *DisplayBuf;
+            DisplayBuf = (unsigned char *)malloc(sizeof(unsigned char)*(3 * 1280 * 720));
+            memset(DisplayBuf,0,3 * 1280 * 720);
+            unsigned char *yuv420[3];
+            yuv420[0]=DisplayBuf;
+            //6.将picture中的YUV数据显示或者保存到文件
+            p=0;
+            for(i=0; i<avctx->height; i++)
+            {
+                memcpy(DisplayBuf+p,tpFrame->data[0] + i * tpFrame->linesize[0], avctx->width);
+                p+=avctx->width;
+            }
+            
+            yuv420[1]=DisplayBuf+p;
+            
+            for(i=0; i<avctx->height/2; i++)
+            {
+                memcpy(DisplayBuf+p,tpFrame->data[1] + i * tpFrame->linesize[1], avctx->width/2);
+                p+=avctx->width/2;
+            }
+            
+            yuv420[2]=DisplayBuf+p;
+            
+            for(i=0; i<avctx->height/2; i++)
+            {
+                memcpy(DisplayBuf+p,tpFrame->data[2] + i * tpFrame->linesize[2], avctx->width/2);
+                p+=avctx->width/2;
+            }
+            NSData *data_=[NSData dataWithBytes:DisplayBuf length:p];
+            //写文件yuv
+            NSFileHandle *myHandle2 = [NSFileHandle fileHandleForWritingAtPath:appDelegate.videoYuvPath];
+            [myHandle2 seekToEndOfFile];
+            [myHandle2 writeData:data_];
+            [myHandle2 closeFile];
+           free(DisplayBuf);
 
             
             
@@ -582,52 +590,4 @@
     return ret;
 }
 
-- (void)creatFile {
-    NSError *error = nil;
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
-    NSString *videoPath_ = [documentsDirectory stringByAppendingPathComponent:@"/video"];
-    //NSString *sourcePath_ = [videoPath_ stringByAppendingString:[NSString stringWithFormat:@"/%@",@"Recorder"]];
-    
-//    if (![[NSFileManager defaultManager] fileExistsAtPath:videoPath_]) {
-//        [[NSFileManager defaultManager] createDirectoryAtPath:videoPath_ withIntermediateDirectories:NO attributes:nil error:&error];
-//    }
-//    if (![[NSFileManager defaultManager] fileExistsAtPath:sourcePath_]) {
-//        [[NSFileManager defaultManager] createDirectoryAtPath:sourcePath_ withIntermediateDirectories:NO attributes:nil error:&error];
-//    }
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    NSDate *date = [NSDate date];
-    [formatter setDateFormat:@"MM-dd-kk-mm-ss"];
-    
-    NSString *directory_ = @"/video";
-    NSString *dataPath_ = [documentsDirectory stringByAppendingPathComponent:directory_];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath_]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath_ withIntermediateDirectories:NO attributes:nil error:&error];
-    }
-    
-//    NSString *videoPath_ = [dataPath_ stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.h264",[formatter stringFromDate:date]]];
-    self.videoPath = videoPath_;
-//    NSString *mixPath_ = [dataPath_ stringByAppendingPathComponent:@"ace.raw"];
-//    self.mixPath = mixPath_;
-//    NSString *refPath_ = [dataPath_ stringByAppendingPathComponent:@"ref.raw"];
-//    self.refPath = refPath_;
-    
-    NSFileManager *filemgr;
-    filemgr = [NSFileManager defaultManager];
-    if ([filemgr fileExistsAtPath:self.videoPath] != YES)
-    {
-        [filemgr createFileAtPath:self.videoPath contents:nil attributes:nil];
-    }
-//    if ([filemgr fileExistsAtPath:self.mixPath] != YES)
-//    {
-//        [filemgr createFileAtPath:self.mixPath contents:nil attributes:nil];
-//    }
-//    if ([filemgr fileExistsAtPath:self.refPath] != YES)
-//    {
-//        [filemgr createFileAtPath:self.refPath contents:nil attributes:nil];
-//    }
-    
-    
-}
 @end

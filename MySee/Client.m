@@ -13,6 +13,7 @@
 #import "AVFRAMEINFO.h"
 #import <sys/time.h>
 #import "VideoDecoder.h"
+#import "AppDelegate.h"
 #define AUDIO_BUF_SIZE	1024
 #define VIDEO_BUF_SIZE	2000000
 
@@ -128,20 +129,28 @@ unsigned int _getTickCount() {
 			break;
 		}
 		
-		if(frameInfo.flags == IPC_FRAME_FLAG_IFRAME)
+		if(frameInfo.flags == IPC_FRAME_FLAG_IFRAME||frmNo==(prevFrmNo+1))
 		{
-            //prevFrmNo=frmNo;
+            prevFrmNo=frmNo;
 			// got an IFrame, draw it.
-            NSLog(@"I(%d)size=%d",frmNo,ret);
+            NSLog(@"%d %@帧size=%d",frmNo,(frameInfo.flags == IPC_FRAME_FLAG_IFRAME?@"I":@"P"),ret);
             NSData *tPData=[NSData dataWithBytes:buf length:ret];
+            
+//            //写文件h264
+//            AppDelegate *appDelegate=[[UIApplication sharedApplication] delegate];
+//            NSFileHandle *myHandle2 = [NSFileHandle fileHandleForWritingAtPath:appDelegate.videoPath];
+//            [myHandle2 seekToEndOfFile];
+//            [myHandle2 writeData:tPData];
+//            [myHandle2 closeFile];
+            
             [pVDecoder push:tPData];
 		}
-        else if(frameInfo.flags == IPC_FRAME_FLAG_PBFRAME)
-        {
-            NSLog(@"P(%d)size=%d",frmNo,ret);
-           // NSData *tPData=[NSData dataWithBytes:buf length:ret];
-          //  [pVDecoder push:tPData];
-        }
+//        else if(frameInfo.flags == IPC_FRAME_FLAG_PBFRAME)
+//        {
+//            NSLog(@"P(%d)size=%d",frmNo,ret);
+//            NSData *tPData=[NSData dataWithBytes:buf length:ret];
+//            [pVDecoder push:tPData];
+//        }
     }
     [pVDecoder deInit];
     free(buf);

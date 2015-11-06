@@ -14,7 +14,7 @@
 @protocol VideoDecoderDelegate;
 @interface VideoDecoder : NSObject
 @property (nonatomic, assign) id<VideoDecoderDelegate> delegate;
-@property (atomic, retain) NSString *videoPath;
+
 
 -(void)deInit;
 -(void)push:(NSObject *)obj;

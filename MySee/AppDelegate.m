@@ -17,6 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+            [self creatFile];
     return YES;
 }
 
@@ -40,6 +41,68 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+- (void)creatFile {
+    NSError *error = nil;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+    //NSString *videoPath_ = [documentsDirectory stringByAppendingPathComponent:@"/video"];
+    //NSString *sourcePath_ = [videoPath_ stringByAppendingString:[NSString stringWithFormat:@"/%@",@"Recorder"]];
+    
+    //    if (![[NSFileManager defaultManager] fileExistsAtPath:videoPath_]) {
+    //        [[NSFileManager defaultManager] createDirectoryAtPath:videoPath_ withIntermediateDirectories:NO attributes:nil error:&error];
+    //    }
+    //    if (![[NSFileManager defaultManager] fileExistsAtPath:sourcePath_]) {
+    //        [[NSFileManager defaultManager] createDirectoryAtPath:sourcePath_ withIntermediateDirectories:NO attributes:nil error:&error];
+    //    }
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    NSDate *date = [NSDate date];
+    [formatter setDateFormat:@"MM-dd-kk-mm-ss"];
+    
+    NSString *directory_ = @"/video";
+    NSString *dataPath_ = [documentsDirectory stringByAppendingPathComponent:directory_];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath_]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath_ withIntermediateDirectories:NO attributes:nil error:&error];
+    }
+    
+    NSString *videoPath_ = [dataPath_ stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.h264",[formatter stringFromDate:date]]];
+    self.videoPath = videoPath_;
+    NSString *videoH264Path_ = [dataPath_ stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_2.h264",[formatter stringFromDate:date]]];
+    self.videoH264Path = videoH264Path_;
+    NSString *videoYuvPath_ = [dataPath_ stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.yuv",[formatter stringFromDate:date]]];
+    self.videoYuvPath = videoYuvPath_;
+    
+    //    NSString *mixPath_ = [dataPath_ stringByAppendingPathComponent:@"ace.raw"];
+    //    self.mixPath = mixPath_;
+    //    NSString *refPath_ = [dataPath_ stringByAppendingPathComponent:@"ref.raw"];
+    //    self.refPath = refPath_;
+    
+    NSFileManager *filemgr;
+    filemgr = [NSFileManager defaultManager];
+    if ([filemgr fileExistsAtPath:self.videoPath] != YES)
+    {
+        [filemgr createFileAtPath:self.videoPath contents:nil attributes:nil];
+    }
+    if ([filemgr fileExistsAtPath:self.videoH264Path] != YES)
+    {
+        [filemgr createFileAtPath:self.videoH264Path contents:nil attributes:nil];
+    }
+    if ([filemgr fileExistsAtPath:self.videoYuvPath] != YES)
+    {
+        [filemgr createFileAtPath:self.videoYuvPath contents:nil attributes:nil];
+    }
+    
+    //    if ([filemgr fileExistsAtPath:self.mixPath] != YES)
+    //    {
+    //        [filemgr createFileAtPath:self.mixPath contents:nil attributes:nil];
+    //    }
+    //    if ([filemgr fileExistsAtPath:self.refPath] != YES)
+    //    {
+    //        [filemgr createFileAtPath:self.refPath contents:nil attributes:nil];
+    //    }
+    
+    
 }
 
 @end

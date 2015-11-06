@@ -11,7 +11,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
+@property (atomic, retain) NSString *videoPath,*videoH264Path,*videoYuvPath;
 
 @end
 
