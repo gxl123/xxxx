@@ -136,12 +136,12 @@ unsigned int _getTickCount() {
             NSLog(@"%d %@帧size=%d",frmNo,(frameInfo.flags == IPC_FRAME_FLAG_IFRAME?@"I":@"P"),ret);
             NSData *tPData=[NSData dataWithBytes:buf length:ret];
             
-//            //写文件h264
-//            AppDelegate *appDelegate=[[UIApplication sharedApplication] delegate];
-//            NSFileHandle *myHandle2 = [NSFileHandle fileHandleForWritingAtPath:appDelegate.videoPath];
-//            [myHandle2 seekToEndOfFile];
-//            [myHandle2 writeData:tPData];
-//            [myHandle2 closeFile];
+            //写文件h264
+            AppDelegate *appDelegate=[[UIApplication sharedApplication] delegate];
+            NSFileHandle *myHandle2 = [NSFileHandle fileHandleForWritingAtPath:appDelegate.videoPath];
+            [myHandle2 seekToEndOfFile];
+            [myHandle2 writeData:tPData];
+            [myHandle2 closeFile];
             
             [pVDecoder push:tPData];
 		}
@@ -237,7 +237,7 @@ unsigned int _getTickCount() {
 #endif
     
 	unsigned int srvType;
-	avIndex = avClientStart(SID, "admin", "admin", 20000, &srvType, 0);
+	avIndex = avClientStart(SID, "admin", "admin123", 20000, &srvType, 0);
 	printf("Step 3: call avClientStart(%d).......\n", avIndex);	
     
 	if(avIndex < 0)

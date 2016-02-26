@@ -30,7 +30,7 @@
     // Dispose of any resources that can be recreated.
 }
 - (IBAction)doConnect:(id)sender {
-    [client start: @"LHN1WRB21X17E1LW45W1"];//@"AAAAAAAAAAAAAAAAAAAF"];//@"1AA8C63C8PSSEKBM111A"];// // Put your device's UID here.
+    [client start:@"AM9N1KAK9TMWSSMS111A"];//@"DD4T9XRPCYURBN6PWFF1"];// @"GVNHXVA2JB57Y5LW4NR1"] ;//@"LHN1WRB21X17E1LW45W1"];//@"AAAAAAAAAAAAAAAAAAAF"];//@"1AA8C63C8PSSEKBM111A"];// // Put your device's UID here.
 }
 
 - (IBAction)doDisconnect:(id)sender {

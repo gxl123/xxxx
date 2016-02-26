@@ -9,6 +9,7 @@
 #import "VideoDecoder.h"
 #import "Common.h"
 #import "AppDelegate.h"
+#import "QueueObj.h"
 //#import "avcodec.h"
 //#import "swscale.h"
 //
@@ -16,7 +17,8 @@
 
 @implementation VideoDecoder{
     NSConditionLock *decVideoThreadLock,*screenAccessLock;
-    NSMutableArray* FrameQueue;
+    //NSMutableArray* FrameQueue;
+    QueueObj* FrameQueue;
     AVCodecParserContext *avpcx;
     AVCodecContext *avctx;
     BOOL bStop;
@@ -31,7 +33,7 @@
         appDelegate=[[UIApplication sharedApplication] delegate];
         decVideoThreadLock=[[NSConditionLock alloc]init];
         screenAccessLock=[[NSConditionLock alloc]init];
-        FrameQueue=[[NSMutableArray alloc]init];
+        FrameQueue= [[QueueObj alloc]init];//[[NSMutableArray alloc]init];
         //初始化解码器
         avcodec_register_all();
         //注册所有的编解码器
@@ -91,7 +93,7 @@
         av_init_packet(&tPacket);
         tPacket.data=(uint8_t *)[h264FrameData bytes];
         tPacket.size=[h264FrameData length];
-        NSLog(@"tPacket.data 1=%@",[self _getHexString:(char*)tPacket.data Size:tPacket.size]);
+        //NSLog(@"tPacket.data 1=%@",[self _getHexString:(char*)tPacket.data Size:tPacket.size]);
         int ret=[self frameDecode:(char*)&tPacket inLen:sizeof(AVPacket) outData:(char*)&tPicture outLen:sizeof(AVPicture)];
         if (ret>0){
             /*
@@ -172,7 +174,7 @@
 //        inLen  -= parserLen;
         //解码
 //        if(tAVPacket.size)
-        NSLog(@"tPacket.data 2=%@",[self _getHexString:(char*)tpAVPacket->data Size:tpAVPacket->size]);
+        //NSLog(@"tPacket.data 2=%@",[self _getHexString:(char*)tpAVPacket->data Size:tpAVPacket->size]);
 //        NSLog(@"%@",self->avctx);
 //         NSLog(@"%@",tpFrame);
 //         NSLog(@"%d",got_picture_ptr);
@@ -578,13 +580,17 @@
 
 -(void)push:(NSObject *)obj
 {
+    NSLog(@"gxl--push=%d",(int)obj);
     [FrameQueue addObject:obj];
 }
 -(NSObject *)pop
 {
-    NSObject *ret=[FrameQueue lastObject];
+    NSObject *ret=(NSObject *)([FrameQueue lastObject]);
     if(ret){
-        ret=[ret copy];
+//        NSLog(@"gxl--pop=%d",(int)ret);
+//        int count=[FrameQueue getCount];
+//        NSLog(@"count=%d",count);
+        //ret=[ret copy];
         [FrameQueue removeLastObject];
     }
     return ret;

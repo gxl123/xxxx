@@ -11,6 +11,14 @@
 		65039ED81BD8E837001A8488 /* Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 65039ED71BD8E837001A8488 /* Client.m */; };
 		65039EE61BD8E91E001A8488 /* libIOTCAPIs_ALL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65039EE11BD8E91E001A8488 /* libIOTCAPIs_ALL.a */; };
 		65039EE71BD8E91F001A8488 /* libIOTCAPIs_ALLT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65039EE21BD8E91E001A8488 /* libIOTCAPIs_ALLT.a */; };
+		6522C0881C477CCD001F74A8 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6522C0851C477CCD001F74A8 /* libstdc++.6.0.9.dylib */; };
+		6522C0891C477CCD001F74A8 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6522C0861C477CCD001F74A8 /* libstdc++.6.dylib */; };
+		6522C08A1C477CCD001F74A8 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6522C0871C477CCD001F74A8 /* libstdc++.dylib */; };
+		6522C08D1C477CE7001F74A8 /* libSystem.B.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6522C08B1C477CE7001F74A8 /* libSystem.B.dylib */; };
+		6522C08E1C477CE7001F74A8 /* libSystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6522C08C1C477CE7001F74A8 /* libSystem.dylib */; };
+		6522C0911C477CF2001F74A8 /* libtidy.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6522C08F1C477CF2001F74A8 /* libtidy.A.dylib */; };
+		6522C0921C477CF2001F74A8 /* libtidy.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6522C0901C477CF2001F74A8 /* libtidy.dylib */; };
+		6522C0971C4783A9001F74A8 /* QueueObj.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6522C0961C4783A9001F74A8 /* QueueObj.mm */; };
 		654457CB1BE2096200B4ED63 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 654457C91BE208ED00B4ED63 /* libz.dylib */; };
 		6548E9E61BDF123800AD3908 /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = 6548E9E51BDF123800AD3908 /* test.m */; };
 		6594061B1BDE210900CB7461 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 659406131BDE210900CB7461 /* libavcodec.a */; };
@@ -48,6 +56,15 @@
 		65039EEA1BD8E988001A8488 /* AVFRAMEINFO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVFRAMEINFO.h; sourceTree = "<group>"; };
 		65039EEB1BD8E988001A8488 /* AVIOCTRLDEFs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVIOCTRLDEFs.h; sourceTree = "<group>"; };
 		65039EEC1BD8E988001A8488 /* platform_Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform_Config.h; sourceTree = "<group>"; };
+		6522C0851C477CCD001F74A8 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
+		6522C0861C477CCD001F74A8 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
+		6522C0871C477CCD001F74A8 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
+		6522C08B1C477CE7001F74A8 /* libSystem.B.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSystem.B.dylib; path = usr/lib/libSystem.B.dylib; sourceTree = SDKROOT; };
+		6522C08C1C477CE7001F74A8 /* libSystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSystem.dylib; path = usr/lib/libSystem.dylib; sourceTree = SDKROOT; };
+		6522C08F1C477CF2001F74A8 /* libtidy.A.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtidy.A.dylib; path = usr/lib/libtidy.A.dylib; sourceTree = SDKROOT; };
+		6522C0901C477CF2001F74A8 /* libtidy.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtidy.dylib; path = usr/lib/libtidy.dylib; sourceTree = SDKROOT; };
+		6522C0951C4783A9001F74A8 /* QueueObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QueueObj.h; path = MySee/video/QueueObj.h; sourceTree = "<group>"; };
+		6522C0961C4783A9001F74A8 /* QueueObj.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = QueueObj.mm; path = MySee/video/QueueObj.mm; sourceTree = "<group>"; };
 		654457C91BE208ED00B4ED63 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		6548E9E41BDF123800AD3908 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
 		6548E9E51BDF123800AD3908 /* test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test.m; sourceTree = "<group>"; };
@@ -174,6 +191,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6522C0911C477CF2001F74A8 /* libtidy.A.dylib in Frameworks */,
+				6522C0921C477CF2001F74A8 /* libtidy.dylib in Frameworks */,
+				6522C08D1C477CE7001F74A8 /* libSystem.B.dylib in Frameworks */,
+				6522C08E1C477CE7001F74A8 /* libSystem.dylib in Frameworks */,
+				6522C0881C477CCD001F74A8 /* libstdc++.6.0.9.dylib in Frameworks */,
+				6522C0891C477CCD001F74A8 /* libstdc++.6.dylib in Frameworks */,
+				6522C08A1C477CCD001F74A8 /* libstdc++.dylib in Frameworks */,
 				65B9F9C71BE9AB3900A72D90 /* CoreFoundation.framework in Frameworks */,
 				65FBA13F1BE89978004F843A /* CoreGraphics.framework in Frameworks */,
 				65FBA13D1BE89784004F843A /* VideoToolbox.framework in Frameworks */,
@@ -210,6 +234,14 @@
 		65039EDE1BD8E91E001A8488 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				6522C08F1C477CF2001F74A8 /* libtidy.A.dylib */,
+				6522C0901C477CF2001F74A8 /* libtidy.dylib */,
+				6522C08B1C477CE7001F74A8 /* libSystem.B.dylib */,
+				6522C08C1C477CE7001F74A8 /* libSystem.dylib */,
+				6522C0851C477CCD001F74A8 /* libstdc++.6.0.9.dylib */,
+				6522C0861C477CCD001F74A8 /* libstdc++.6.dylib */,
+				6522C0871C477CCD001F74A8 /* libstdc++.dylib */,
+				65B9F9C61BE9AB3900A72D90 /* CoreFoundation.framework */,
 				65FBA13E1BE89978004F843A /* CoreGraphics.framework */,
 				65FBA13C1BE89784004F843A /* VideoToolbox.framework */,
 				65FBA13A1BE8951B004F843A /* CoreVideo.framework */,
@@ -418,12 +450,12 @@
 			children = (
 				65039ED61BD8E837001A8488 /* Client.h */,
 				65039ED71BD8E837001A8488 /* Client.m */,
-				6D5699321A0638BE0072F175 /* AppDelegate.h */,
-				6D5699331A0638BE0072F175 /* AppDelegate.m */,
 				6D5699351A0638BE0072F175 /* ViewController.h */,
 				6D5699361A0638BE0072F175 /* ViewController.m */,
 				65E050DD1BE349D4005E7D84 /* Utilities.h */,
 				65E050DE1BE349D4005E7D84 /* Utilities.m */,
+				6D5699321A0638BE0072F175 /* AppDelegate.h */,
+				6D5699331A0638BE0072F175 /* AppDelegate.m */,
 				65039ED51BD89611001A8488 /* Common.h */,
 				6D5699381A0638BE0072F175 /* Main.storyboard */,
 				6D56993B1A0638BE0072F175 /* Images.xcassets */,
@@ -440,6 +472,8 @@
 				65039ED01BD88DE5001A8488 /* VideoDecoder.h */,
 				65039ED11BD88DE5001A8488 /* VideoDecoder.m */,
 				6548E9E41BDF123800AD3908 /* test.h */,
+				6522C0951C4783A9001F74A8 /* QueueObj.h */,
+				6522C0961C4783A9001F74A8 /* QueueObj.mm */,
 				6548E9E51BDF123800AD3908 /* test.m */,
 			);
 			name = Video;
@@ -458,7 +492,6 @@
 		6D5699221A0638BE0072F175 = {
 			isa = PBXGroup;
 			children = (
-				65B9F9C61BE9AB3900A72D90 /* CoreFoundation.framework */,
 				65039ED91BD8E91E001A8488 /* Include */,
 				65039EDE1BD8E91E001A8488 /* Lib */,
 				6D56992D1A0638BE0072F175 /* MySee */,
@@ -570,6 +603,7 @@
 				6D5699341A0638BE0072F175 /* AppDelegate.m in Sources */,
 				6D5699311A0638BE0072F175 /* main.m in Sources */,
 				65039ED21BD88DE5001A8488 /* VideoDecoder.m in Sources */,
+				6522C0971C4783A9001F74A8 /* QueueObj.mm in Sources */,
 				65E050DF1BE349D4005E7D84 /* Utilities.m in Sources */,
 				6548E9E61BDF123800AD3908 /* test.m in Sources */,
 			);
@@ -681,7 +715,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_IDENTITY = "iPhone Developer: xiansheng Zhou (9J575PEP7A)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Anton Bijma (M9EEDQ9Y63)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Anton Bijma (M9EEDQ9Y63)";
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/ffmpeg/include";
 				INFOPLIST_FILE = MySee/Info.plist;
@@ -690,9 +725,9 @@
 					"$(PROJECT_DIR)/ffmpeg/universal-lib",
 					"$(PROJECT_DIR)/Lib/IOS",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.need.VSNvrLive;
+				PRODUCT_BUNDLE_IDENTIFIER = com.luvion.p2pcam264;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "dc6125e9-87b7-4349-8489-242711dd62a5";
+				PROVISIONING_PROFILE = "38f881a9-aa83-4da6-874a-f11934f90a89";
 			};
 			name = Debug;
 		};
@@ -711,7 +746,7 @@
 					"$(PROJECT_DIR)/ffmpeg/universal-lib",
 					"$(PROJECT_DIR)/Lib/IOS",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.need.VSNvrLive;
+				PRODUCT_BUNDLE_IDENTIFIER = com.luvion.p2pcam264;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "72afe80e-9385-4e8e-b447-bc64f79d6fa4";
 			};
